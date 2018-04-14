@@ -10,6 +10,14 @@ public class Calculator extends JFrame {
 
     private static action currentMode;
 
+    private static JTextField createTextBox(int x, int y) {
+        JTextField box = new JTextField(20);
+        box.setBounds(x, y, 70, 70);
+        box.setHorizontalAlignment(JTextField.CENTER);
+        box.setEditable(false);
+        return box;
+    }
+
     private static void placeComponents(JPanel panel) {
         panel.setLayout(null);
 
@@ -21,34 +29,25 @@ public class Calculator extends JFrame {
 
 
         JFormattedTextField firstDigit = new JFormattedTextField(numberFormatter);
-        firstDigit.setBounds(5,5,70,70);
+        firstDigit.setBounds(5, 5, 70, 70);
         firstDigit.setHorizontalAlignment(JTextField.CENTER);
         firstDigit.setFont(new Font("Fira Code", Font.PLAIN, 12));
         panel.add(firstDigit);
 
-        JTextField operator = new JTextField(20);
-        operator.setBounds(80, 5, 70, 70);
-        operator.setHorizontalAlignment(JTextField.CENTER);
-        operator.setEditable(false);
+        JTextField operator = createTextBox(80, 5);
         panel.add(operator);
 
         JFormattedTextField secondDigit = new JFormattedTextField(numberFormatter);
-        secondDigit.setBounds(155,5,70,70);
+        secondDigit.setBounds(155, 5, 70, 70);
         secondDigit.setHorizontalAlignment(JTextField.CENTER);
         secondDigit.setFont(new Font("Fira Code", Font.PLAIN, 12));
         panel.add(secondDigit);
 
-        JTextField equalSign = new JTextField(20);
-        equalSign.setBounds(230, 5, 70, 70);
-        equalSign.setHorizontalAlignment(JTextField.CENTER);
-        equalSign.setEditable(false);
+        JTextField equalSign = createTextBox(230, 5);
         equalSign.setText("=");
         panel.add(equalSign);
 
-        JTextField result = new JTextField(20);
-        result.setBounds(305, 5, 70, 70);
-        result.setHorizontalAlignment(JTextField.CENTER);
-        result.setEditable(false);
+        JTextField result = createTextBox(305, 5);
         panel.add(result);
 
         JButton plusButton = new JButton("+");
@@ -102,35 +101,37 @@ public class Calculator extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    int first, second, res;
+                    int first, second;
                     first = Integer.parseInt(firstDigit.getText().replaceAll(",", ""));
                     second = Integer.parseInt(secondDigit.getText().replaceAll(",", ""));
-                    switch (currentMode) {
-                        case PLUS:
-                            res = first + second;
-                            result.setText(Integer.toString(res));
-                            break;
-                        case MINUS:
-                            res = first - second;
-                            result.setText(Integer.toString(res));
-                            break;
-                        case DIVISION:
-                            res = first / second;
-                            result.setText(Integer.toString(res));
-                            break;
-                        case MULTIPLY:
-                            res = first * second;
-                            result.setText(Integer.toString(res));
-                            break;
+                    if (currentMode != action.NONE) {
+                      result.setText(Integer.toString(calculate(first, second, currentMode)));
                     }
-                }
-                catch (Exception err) {
+                } catch (Exception err) {
                     result.setText("Error");
                 }
             }
         });
     }
 
+    private static int calculate(int first, int second, action mode) {
+        int res = 0;
+        switch (mode) {
+            case PLUS:
+                res = first + second;
+                break;
+            case MINUS:
+                res = first - second;
+                break;
+            case DIVISION:
+                res = first / second;
+                break;
+            case MULTIPLY:
+                res = first * second;
+                break;
+        }
+        return res;
+    }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Calculator");
