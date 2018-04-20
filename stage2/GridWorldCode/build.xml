@@ -11,6 +11,19 @@
    <property name="package.name" value="info.gridworld"/>
    <property name="framework.resources" 
              value="${framework.dir}/info/gridworld/gui/WorldFrameResources.properties" />
+
+   <property name='bin.dir' value='bin' />
+   <property name='classes.dir' value='${bin.dir}/classes' />
+   <property name='jar.dir' value='${bin.dir}/jar' />
+
+   <property name='proj-name' value='boxBug' />
+   <property name='runner-main' value='BoxBugRunner' />
+
+   <path id='classpath'>
+      <fileset dir='.' includes='**/gridworld.jar'/>
+   </path>
+
+   <path id='app1' location='${jar.dir}/${runner-main}.jar'/>
    
    <target name="init">
       <tstamp>
@@ -19,6 +32,7 @@
       <mkdir dir="${build.dir}"/>
       <mkdir dir="${dist.dir}"/>
       <mkdir dir="${dist.zip.dir}"/>
+      <mkdir dir="${bin.dir}"/>
    </target>
 
    <target name="props" depends="init" description="Set version-specific properties.">
@@ -84,8 +98,36 @@
       </zip>
    </target>
 
+   <target name='build-runner' depends='init'>
+      <mkdir dir='${classes.dir}/${proj-name}' />
+      <javac srcdir='${projects.dir}/${proj-name}' destdir='${classes.dir}/${proj-name}'>
+         <classpath>
+            <path refid='classpath' />
+         </classpath>
+      </javac>
+   </target>
+
+   <target name='jar-runner' depends='build-runner'>
+      <mkdir dir='${jar.dir}' />
+      <jar basedir='${classes.dir}/${proj-name}' destfile='${jar.dir}/${runner-main}.jar'>
+         <manifest>
+            <attribute name="Main-Class" value="${runner-main}"/>
+         </manifest>
+      </jar>
+   </target>
+
+   <target name='run-runner' depends='jar-runner'>
+      <java classname='${runner-main}' fork='true'>
+         <classpath>
+            <path refid='classpath' />
+            <path refid='app1'/>
+         </classpath>
+      </java>
+   </target>
+
    <target name="clean">
       <delete dir="${build.dir}"/>
       <delete dir="${dist.dir}"/>
+      <delete dir="${bin.dir}" />
    </target>
 </project>
