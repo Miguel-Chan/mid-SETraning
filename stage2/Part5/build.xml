@@ -16,8 +16,8 @@
    <property name='classes.dir' value='${bin.dir}/classes' />
    <property name='jar.dir' value='${bin.dir}/jar' />
 
-   <property name='proj-name' value='ChameleonKid' />
-   <property name='runner-main' value='ChameleonKidRunner' />
+   <property name='proj-name' value='2' />
+   <property name='runner-main' value='SparseGridRunner' />
 
    <property name='test.dir' value='test-lib'/>
 
@@ -106,7 +106,7 @@
 
    <target name='build-runner' depends='init'>
       <mkdir dir='${classes.dir}/${proj-name}' />
-      <javac srcdir='${projects.dir}/${proj-name}' destdir='${classes.dir}/${proj-name}'>
+      <javac srcdir='${projects.dir}' destdir='${classes.dir}/${proj-name}'>
          <classpath>
             <path refid='classpath' />
             <path refid='test-lib'/>
