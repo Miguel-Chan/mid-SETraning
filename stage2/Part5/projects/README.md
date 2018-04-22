@@ -2,7 +2,9 @@
 
    The linked-list method is a more time-efficient implementation than BoundedGrid because when `getOccupiedLocations` is called the BoundedGrid will have to scan through the whole array to find all the location, which involves a lot of null checking. With the linked-list method, it only needs to scan every linked-list, which contains only existing objects, so it doesn't need to check whether there is an object in a location.
 
-2. Efficiency chart:
+2. Many methods in UnboundedGrid can be reused since they would have the same design and those method share the same functionalities. Methods getOccupiedLocations, remove and get in UnboundedGrid can be used without change. `put` can not be used without change since in BoundedGrid `put` requires another `isValid` check.
+
+   Efficiency chart:
 
    |            Methods             | `SparseGridNode` version | `LinkedList<OccupantInCol>` version | `HashMap` version | `TreeMap` version |
    | :----------------------------: | :----------------------: | :---------------------------------: | :---------------: | :---------------: |

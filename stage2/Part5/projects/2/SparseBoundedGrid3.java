@@ -7,7 +7,7 @@ import java.util.*;
 
 /**
 * Rewrite SparseBounded with HashMap,
-* methods getOccupiedLocations, remove, put, get in UnboundedGrid
+* methods getOccupiedLocations, remove, get in UnboundedGrid
 * can be used without change.
 */
 
