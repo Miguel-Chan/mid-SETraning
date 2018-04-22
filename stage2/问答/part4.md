@@ -113,4 +113,152 @@
 
 10. Because `ChameleonCritter` doesn't use a different way to collect actors than a normal critter, thus the same actor list can be used and the `getActor` method doesn't need to be overridden.
 
-11. ​
+11. The `Actor` class
+
+    ```java
+    //@file: info/gridworld/actor/Actor.java
+    //@line: 102~105   
+    public Location getLocation()
+        {
+            return location;
+        }
+    ```
+
+12. A critter can access its own grid by calling `getGrid` method which is a method in `Actor` class
+
+    ```java
+    //@file: info/gridworld/actor/Actor.java
+    //@line: 92~95   
+    public Grid<Actor> getGrid()
+        {
+            return grid;
+        }
+    ```
+
+13. Because `CrabCritter` processes actors the same way as a normal critter, so no overriding of `processActors` is needed. 
+
+14. The `CrabCritter` finds other actors by getting all the actors in its front, left-front and right-front direction and after it gets the actors list, it will remove all the actors on the list.
+
+    ```java
+    //@file: critters/CrabCritter.java
+    //@line: 44~57
+    public ArrayList<Actor> getActors()
+        {
+            ArrayList<Actor> actors = new ArrayList<Actor>();
+            int[] dirs =
+                { Location.AHEAD, Location.HALF_LEFT, Location.HALF_RIGHT };
+            for (Location loc : getLocationsInDirections(dirs))
+            {
+                Actor a = getGrid().get(loc);
+                if (a != null)
+                    actors.add(a);
+            }
+
+            return actors;
+        }
+    ```
+
+15. Because the `CrabCritter` needs to get all the actors in its front, left-front and right-front direction and by calling `getLocationsInDirections` it gets all the locations that is valid in those directions and with those locations it can check for any neighboring actors.
+
+    ```java
+    //@file: critters/CrabCritter.java
+    //@line: 47~59
+            int[] dirs =
+                { Location.AHEAD, Location.HALF_LEFT, Location.HALF_RIGHT };
+            for (Location loc : getLocationsInDirections(dirs))
+                
+    //@file: critters/CrabCritter.java
+    //@line: 101~114
+    public ArrayList<Location> getLocationsInDirections(int[] directions)
+        {
+            ArrayList<Location> locs = new ArrayList<Location>();
+            Grid gr = getGrid();
+            Location loc = getLocation();
+        
+            for (int d : directions)
+            {
+                Location neighborLoc = loc.getAdjacentLocation(getDirection() + d);
+                if (gr.isValid(neighborLoc))
+                    locs.add(neighborLoc);
+            }
+            return locs;
+        }    
+    ```
+
+16. (4, 3), (4, 4) and (4, 5).
+
+17. Similarity: they all move only one cell at a time
+
+    Difference: a critter can move to any adjacent empty location while a `CrabCritter` can only move left or right.
+
+    ```java
+    //@file: critters/CrabCritter.java
+    //@line: 62~72
+    public ArrayList<Location> getMoveLocations()
+        {
+            ArrayList<Location> locs = new ArrayList<Location>();
+            int[] dirs =
+                { Location.LEFT, Location.RIGHT };
+            for (Location loc : getLocationsInDirections(dirs))
+                if (getGrid().get(loc) == null)
+                    locs.add(loc);
+
+            return locs;
+        }
+
+    //@file: info/gridworld/actor/Critter.java
+    //@line: 88~91
+    public ArrayList<Location> getMoveLocations()
+        {
+            return getGrid().getEmptyAdjacentLocations(getLocation());
+        }
+    ```
+
+18. If the list of locations it can move to is empty, `selectMoveLocation` will return its current location, and in  `makeMove ` it will randomly turn right or left.
+
+    ```java
+    //@file: info/gridworld/actor/Critter.java
+    //@line: 104~111
+    public Location selectMoveLocation(ArrayList<Location> locs)
+        {
+            int n = locs.size();
+            if (n == 0)
+                return getLocation();
+        	....
+    }
+
+    //@file: critters/CrabCritter.java
+    //@line: 77~91
+    public void makeMove(Location loc)
+        {
+            if (loc.equals(getLocation()))
+            {
+                double r = Math.random();
+                int angle;
+                if (r < 0.5)
+                    angle = Location.LEFT;
+                else
+                    angle = Location.RIGHT;
+                setDirection(getDirection() + angle);
+            }
+            else
+                super.makeMove(loc);
+        }
+    ```
+
+19. Because `CrabCritter` is also a critter and a critter doesn't eat a critter in `processActor`
+
+    ```java
+    //@file: info/gridworld/actor/Critter.java
+    //@line: 71~78
+    public void processActors(ArrayList<Actor> actors)
+        {
+            for (Actor a : actors)
+            {
+                if (!(a instanceof Rock) && !(a instanceof Critter))
+                    a.removeSelfFromGrid();
+            }
+        }
+    ```
+
+    ​
