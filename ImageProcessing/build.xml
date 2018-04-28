@@ -1,4 +1,4 @@
-<project name='ImageProcessing' basedir='.' default='main'>
+<project name='ImageReader' basedir='.' default='main'>
 
     <property name="src.dir" value="src"/>
 
