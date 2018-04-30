@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="mazebug" default="all">
+  
+  
+  <property file="mazebug.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+    <include name="*.swc"/>
+    <include name="*.war"/>
+    <include name="*.ane"/>
+    <include name="*.zip"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  
+  <!-- Global Libraries -->
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module MazeBug -->
+  
+  <dirname property="module.mazebug.basedir" file="${ant.file}"/>
+  
+  <property name="main-class" value="info.gridworld.maze.MazeBugRunner" />
+  <path id='application' location='MazeBugRun.jar' />
+  
+  <property name="compiler.args.mazebug" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="mazebug.output.dir" value="${module.mazebug.basedir}/out/production/MazeBug"/>
+  <property name="mazebug.testoutput.dir" value="${module.mazebug.basedir}/out/test/MazeBug"/>
+  
+  <path id="mazebug.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="mazebug.module.production.classpath"/>
+  
+  <path id="mazebug.runtime.production.module.classpath">
+    <pathelement location="${mazebug.output.dir}"/>
+  </path>
+  
+  <path id="mazebug.module.classpath">
+    <pathelement location="${mazebug.output.dir}"/>
+  </path>
+  
+  <path id="mazebug.runtime.module.classpath">
+    <pathelement location="${mazebug.testoutput.dir}"/>
+    <pathelement location="${mazebug.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.mazebug">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  <patternset id="excluded.from.module.projects">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.mazebug">
+    <patternset refid="excluded.from.module.mazebug"/>
+    <patternset refid="excluded.from.module.projects"/>
+  </patternset>
+  
+  <path id="mazebug.module.sourcepath">
+    <dirset dir="${module.mazebug.basedir}">
+      <include name="framework"/>
+    </dirset>
+    <dirset dir="${module.mazebug.basedir}/projects">
+      <include name="mazeBug"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.mazebug" depends="compile.module.mazebug.production,compile.module.mazebug.tests" description="Compile modules MazeBug"/>
+  
+  <target name="compile.module.mazebug.production" description="Compile modules MazeBug; production classes">
+    <mkdir dir="${mazebug.output.dir}"/>
+    <javac destdir="${mazebug.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.mazebug}"/>
+      <bootclasspath refid="mazebug.module.bootclasspath"/>
+      <classpath refid="mazebug.module.production.classpath"/>
+      <src refid="mazebug.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.mazebug"/>
+    </javac>
+    
+    <copy todir="${mazebug.output.dir}">
+      <fileset dir="${module.mazebug.basedir}/framework">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.mazebug.basedir}/projects/mazeBug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.mazebug.tests" depends="compile.module.mazebug.production" description="compile modules MazeBug; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.mazebug" description="cleanup module">
+    <delete dir="${mazebug.output.dir}"/>
+    <delete dir="${mazebug.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.mazebug" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.mazebug" description="build all modules"/>
+
+  <target name='jar' depends='build.modules'>
+        <jar destfile='./MazeBugRun.jar' basedir='${mazebug.output.dir}'>
+            <manifest>
+                    <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+  <target name="run" depends="jar" >
+    <java fork="true" jar="./MazeBugRun.jar">
+    </java>
+  </target>
+  
+  <target name="all" depends="build.modules" description="build all"/>
+</project>
