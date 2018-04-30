@@ -1,10 +1,12 @@
-package ImageReader;
+package imager;
+
+import imagereader.IImageProcessor;
 
 import java.awt.*;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.RGBImageFilter;
 
-public class ImplementImageProcessor implements ImageProcessor {
+public class ImplementImageProcessor implements IImageProcessor {
 
     private static final int RED_RGB_VALUE = 0x00ff0000;
     private static final int GREEN_RGB_VALUE = 0x0000ff00;
@@ -19,7 +21,7 @@ public class ImplementImageProcessor implements ImageProcessor {
     public Image showChanelR(Image sourceImage) {
         return Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(
                 sourceImage.getSource(),
-                new channelFilter(RED_RGB_VALUE)
+                new ChannelFilter(RED_RGB_VALUE)
         ));
     }
 
@@ -27,7 +29,7 @@ public class ImplementImageProcessor implements ImageProcessor {
     public Image showChanelG(Image sourceImage) {
         return Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(
                 sourceImage.getSource(),
-                new channelFilter(GREEN_RGB_VALUE)
+                new ChannelFilter(GREEN_RGB_VALUE)
         ));
     }
 
@@ -35,7 +37,7 @@ public class ImplementImageProcessor implements ImageProcessor {
     public Image showChanelB(Image sourceImage) {
         return Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(
                 sourceImage.getSource(),
-                new channelFilter(BLUE_RGB_VALUE)
+                new ChannelFilter(BLUE_RGB_VALUE)
         ));
     }
 
@@ -43,15 +45,19 @@ public class ImplementImageProcessor implements ImageProcessor {
     public Image showGray(Image sourceImage) {
         return Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(
                 sourceImage.getSource(),
-                new grayFilter()
+                new GrayFilter()
         ));
     }
 
-    private class channelFilter extends RGBImageFilter {
+    /**
+     * Filter to filter image into the input rgb value
+     * channel.
+     */
+    private class ChannelFilter extends RGBImageFilter {
 
-        int filterValue;
+        private int filterValue;
 
-        public channelFilter(int val) {
+        public ChannelFilter(int val) {
             filterValue = val;
             canFilterIndexColorModel = true;
         }
@@ -62,15 +68,20 @@ public class ImplementImageProcessor implements ImageProcessor {
         }
     }
 
-    private class grayFilter extends RGBImageFilter {
-        public grayFilter() { canFilterIndexColorModel = true; }
+
+    /**
+     * Filter to filter image into gray image using
+     * gray = 0.299 * R + 0.587 * G + 0.114 *B
+     */
+    private class GrayFilter extends RGBImageFilter {
+        public GrayFilter() { canFilterIndexColorModel = true; }
 
         @Override
         public int filterRGB(int x, int y, int rgb) {
-            int red = (int)(((rgb & RED_RGB_VALUE) >> 16) * RED_WEIGHT);
-            int green = (int)(((rgb & GREEN_RGB_VALUE) >> 8) * GREEN_WEIGHT);
-            int blue = (int)((rgb & BLUE_RGB_VALUE) * BLUE_WEIGHT);
-            int gray = red + green + blue;
+            double red = (((rgb & RED_RGB_VALUE) >> 16) * RED_WEIGHT);
+            double green = (((rgb & GREEN_RGB_VALUE) >> 8) * GREEN_WEIGHT);
+            double blue = ((rgb & BLUE_RGB_VALUE) * BLUE_WEIGHT);
+            int gray = (int)(red + green + blue);
 
             return 0xff000000 | gray << 16 | gray << 8 | gray;
         }

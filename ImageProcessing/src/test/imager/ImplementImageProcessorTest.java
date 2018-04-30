@@ -1,9 +1,9 @@
-package test.ImageReader;
+package test.imager;
 
-import ImageReader.ImageIO;
-import ImageReader.ImageProcessor;
-import ImageReader.ImplementImageIO;
-import ImageReader.ImplementImageProcessor;
+import imager.ImplementImageIO;
+import imager.ImplementImageProcessor;
+import imagereader.IImageIO;
+import imagereader.IImageProcessor;
 import org.junit.Test;
 
 import java.awt.*;
@@ -20,14 +20,16 @@ import static org.junit.Assert.assertEquals;
  */
 public class ImplementImageProcessorTest {
 
-    private static final int TEST_SIZE = 6;
+    private static final int TEST_SIZE = 2;
 
     /**
      * Method: showChanelR(Image sourceImage)
      * Test performs by checking whether the output image is the
      * same as the prepared output sample
      */
-    ImageProcessor tester = new ImplementImageProcessor();
+    private IImageProcessor tester = new ImplementImageProcessor();
+
+
     @Test
     public void testShowChanelR() throws Exception {
         test("red");
@@ -41,11 +43,11 @@ public class ImplementImageProcessorTest {
      * same as the prepared output sample
      */
     private void test(String color) throws Exception{
-        ImageIO io = new ImplementImageIO();
+        IImageIO io = new ImplementImageIO();
         for (int i = 1; i <= TEST_SIZE; i++) {
-            String fileName = "assets/" + Integer.toString(i) + ".bmp";
-            String testOutputSampleFileName = "assets/" + Integer.toString(i)
-                    + "-" + color + ".bmp";
+            String fileName = "assets/test/" + Integer.toString(i) + ".bmp";
+            String testOutputSampleFileName = "assets/test/goal/" + Integer.toString(i)
+                    + "_" + color + "_goal.bmp";
 
             Image origin = io.myRead(fileName);
             Image expecting = io.myRead(testOutputSampleFileName);
@@ -64,7 +66,7 @@ public class ImplementImageProcessorTest {
                     output = tester.showGray(origin);
                     break;
                 default:
-                    throw new Exception("Parameter color is invalid");
+                    return;
             }
 
             assertEquals(output.getHeight(null), expecting.getHeight(null));
@@ -73,8 +75,8 @@ public class ImplementImageProcessorTest {
             //Test for the content of the image.
             int width = expecting.getWidth(null);
             int height = expecting.getHeight(null);
-            BufferedImage myBuffer = ImplementImageIO.ImageToBufferedImage(output);
-            BufferedImage expectingBuffer = ImplementImageIO.ImageToBufferedImage(expecting);
+            BufferedImage myBuffer = ImplementImageIO.imageToBufferedImage(output);
+            BufferedImage expectingBuffer = ImplementImageIO.imageToBufferedImage(expecting);
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     assertEquals(myBuffer.getRGB(x, y), expectingBuffer.getRGB(x, y));

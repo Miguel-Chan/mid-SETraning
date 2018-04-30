@@ -1,12 +1,16 @@
-import ImageReader.ImplementImageIO;
-import ImageReader.ImplementImageProcessor;
-import ImageReader.Runner;
+// ImagaReaderRunner.java
+import imager.ImplementImageIO;
+import imager.ImplementImageProcessor;
+import imagereader.IImageIO;
+import imagereader.IImageProcessor;
+import imagereader.Runner;
 
-public class ImageReaderRunner {
+public final class ImageReaderRunner {
 
+    private ImageReaderRunner() {}
     public static void main(String[] args) {
-        ImplementImageIO imageIO = new ImplementImageIO();
-        ImplementImageProcessor processor = new ImplementImageProcessor();
-        Runner.run(imageIO, processor);
+        IImageIO imageioer = new ImplementImageIO();
+        IImageProcessor processor = new ImplementImageProcessor();
+        Runner.run(imageioer, processor);
     }
 }
