@@ -8,6 +8,7 @@ import info.gridworld.grid.*;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
@@ -18,12 +19,11 @@ import javax.swing.JOptionPane;
  * The implementation of this class is testable on the AP CS A and AB exams.
  */
 public class MazeBug extends Bug {
-	public Location next;
-	public Location last;
-	public boolean isEnd = false;
-	public Stack<Location> crossLocation = new Stack<Location>();
-	public Integer stepCount = 0;
-	boolean hasShown = false;//final message has been shown
+	private Location next;
+    private boolean isEnd = false;
+	private Stack<Location> crossLocation = new Stack<Location>();
+	private Integer stepCount = 0;
+    private boolean hasShown = false;//final message has been shown
 
 	/**
 	 * Constructs a maze bug that can go out of a maze
@@ -31,7 +31,7 @@ public class MazeBug extends Bug {
 	 */
 	public MazeBug() {
 		setColor(Color.GREEN);
-		last = new Location(0, 0);
+        new Location(0, 0);
 	}
 
 	/**
@@ -40,9 +40,9 @@ public class MazeBug extends Bug {
 	public void act() {
 		boolean willMove = canMove();
 		isEnd = hasReached();
-		if (isEnd == true) {
+		if (isEnd) {
 		//to show step count when reach the goal		
-			if (hasShown == false) {
+			if (!hasShown) {
 				String msg = stepCount.toString() + " steps";
 				JOptionPane.showMessageDialog(null, msg);
 				hasShown = true;
@@ -89,7 +89,7 @@ public class MazeBug extends Bug {
      * @return a new available location to go to next.
      */
     private Location getNewLocation(int[] directionsCount) {
-        ArrayList<Location> locs = getAvailableLocations();
+        ArrayList<Location> locs = (ArrayList<Location>) getAvailableLocations();
         if (locs.size() == 1) {
             return locs.get(0);
         }
@@ -123,7 +123,7 @@ public class MazeBug extends Bug {
      * the maze.
      */
     public boolean hasReached() {
-	    ArrayList<Location> locs = getValid(getLocation());
+	    ArrayList<Location> locs = (ArrayList<Location>) getValid(getLocation());
 	    if (locs.size() == 0) {
 	        return false;
         }
@@ -143,14 +143,15 @@ public class MazeBug extends Bug {
 	 *            the location to detect.
 	 * @return List of positions.
 	 */
-	public ArrayList<Location> getValid(Location loc) {
+	public List<Location> getValid(Location loc) {
         ArrayList<Location> locs = new ArrayList<Location>();
         Grid<Actor> gr = getGrid();
         for (int i = 0; i < Location.FULL_CIRCLE / Location.RIGHT; i++)
         {
             Location neighborLoc = loc.getAdjacentLocation(i * Location.RIGHT);
-            if (gr.isValid(neighborLoc))
+            if (gr.isValid(neighborLoc)) {
                 locs.add(neighborLoc);
+            }
         }
         return locs;
 	}
@@ -169,8 +170,8 @@ public class MazeBug extends Bug {
      * @return a list of locations with no rock or
      * flower on.
      */
-    private ArrayList<Location> getAvailableLocations() {
-	    ArrayList<Location> locs = getValid(getLocation());
+    private List<Location> getAvailableLocations() {
+	    ArrayList<Location> locs = (ArrayList<Location>)getValid(getLocation());
         ArrayList<Location> result = new ArrayList<Location>();
         if (locs.size() == 0) {
             return result;
@@ -191,14 +192,16 @@ public class MazeBug extends Bug {
 	 */
 	public void move() {
 		Grid<Actor> gr = getGrid();
-		if (gr == null)
-			return;
+		if (gr == null) {
+            return;
+        }
 		Location loc = getLocation();
 		if (gr.isValid(next)) {
 			setDirection(getLocation().getDirectionToward(next));
 			moveTo(next);
-		} else
+		} else {
 			removeSelfFromGrid();
+		}
 		Flower flower = new Flower(getColor());
 		flower.putSelfInGrid(gr, loc);
 	}
