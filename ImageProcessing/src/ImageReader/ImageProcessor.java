@@ -2,7 +2,7 @@ package ImageReader;
 
 import java.awt.*;
 
-public interface ImageProcressor {
+public interface ImageProcessor {
     Image showChanelR(Image sourceImage);
 
     Image showChanelG(Image sourceImage);

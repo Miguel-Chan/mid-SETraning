@@ -1,6 +1,7 @@
 package ImageReader;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,17 +64,36 @@ public class ImplementImageIO implements ImageIO {
             return Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(
                     width, height, sourceBuffer, 0, width));
         } catch (Exception e) {
-            System.out.println(e.getCause());
+            e.printStackTrace();
             return null;
         }
     }
 
+    public static BufferedImage ImageToBufferedImage(Image image) {
+        BufferedImage result = new BufferedImage(image.getWidth(null),
+                image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D graphics = result.createGraphics();
+        graphics.drawImage(image, 0, 0, null);
+        graphics.dispose();
+
+        return result;
+    }
+
     @Override
     public Image myWrite(Image image, String filePath) {
-        File outputFile = new File(filePath);
-        
+        try {
+            File outputFile = new File(filePath);
+            BufferedImage buffer = ImageToBufferedImage(image);
 
-        return null;
+            javax.imageio.ImageIO.write(buffer, "bmp", outputFile);
+
+            return image;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     public static int DoubleWordToInt(byte[] doubleWord) {
