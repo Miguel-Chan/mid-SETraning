@@ -28,7 +28,7 @@ public class main {
     private final static int ASTAR_TEST_TIME = 3;
 
     private final static int BFS_SCORE = 2;
-    private final static int ASTAR_SCORE = 6;
+    private final static int ASTAR_SCORE = 5;
 
     private final static JigsawNode DEST_NODE = new JigsawNode(new int[]{25,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,0});
     private static int bfsLength;
@@ -90,8 +90,10 @@ public class main {
             searchedNodesNum += TestAStar(aStarNodes[i], DEST_NODE);
             final long duration = System.nanoTime() - startTime;
             totalTime += duration;
-            System.out.println("\n" + runtimeToken + ":" + duration / 1000000);
+            System.out.println("\n" + runtimeToken + ":" + duration / 1000000 + "ms");
         }
+        System.out.println("\nTotal " + runtimeToken + ":" + totalTime / 1000000 + "ms");
+        System.out.println("Average " + runtimeToken + ":" + totalTime / 1000000 / ASTAR_TEST_TIME + "ms");
 
         return calAStarScore(searchedNodesNum / ASTAR_TEST_TIME);
     }
@@ -101,16 +103,16 @@ public class main {
 
         try {
             if (!solution.ASearch(new JigsawNode(startNode), new JigsawNode(destNode))) {
-                return ASTAR_UPPER_LIMIT;
+                return Integer.MAX_VALUE;
             }
         } catch (Throwable th) {
             th.	printStackTrace();
-            return ASTAR_UPPER_LIMIT;
+            return Integer.MAX_VALUE;
         }
 
         List<JigsawNode> solutionPath = solution.getPath();
         if (!Jigsaw.isValidPath(solutionPath, startNode, destNode)) {
-            return ASTAR_UPPER_LIMIT;
+            return Integer.MAX_VALUE;
         }
 
         return solution.getSearchedNodesNum();
