@@ -16,7 +16,7 @@ java -cp build Runners.RunnerPart2
 ```
 
 
-#### Judge
+#### Test
 
 ##### Constraints
 
@@ -25,7 +25,7 @@ java -cp build Runners.RunnerPart2
 | Time | < 1 secs | guarantee shortest path length no more than 11 in `BFSearch` |
 | Memory | < 32 MB | / |
 | Code length | < 1MB | / |
-| System call | forbid | / |
+| Sensitive operation | forbid | / |
 
 ##### Description
 Finish class `Solution`.
@@ -57,31 +57,29 @@ End state:{25,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,0}
 Total number of searched nodes:169
 Depth of the current node is:9
 
-Runtime:21
+Runtime:20ms
 Jigsaw AStar Search Result:
 Begin state:{1,0,1,8,23,24,16,4,9,7,20,12,3,10,15,17,6,22,5,19,14,21,2,18,11,13}
 End state:{25,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,0}
 Total number of searched nodes:29000
 Depth of the current node is:210
 
-Runtime:306
+Runtime:433ms
 Jigsaw AStar Search Result:
 Begin state:{24,8,2,13,9,3,15,22,5,6,21,12,4,14,11,1,18,20,19,7,17,23,24,16,0,10}
 End state:{25,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,0}
 Total number of searched nodes:29000
 Depth of the current node is:289
 
-Runtime:305
+Runtime:470ms
 
-Score:6
+Total Runtime:924ms
+Average Runtime:308ms
+
+Score:0
 
 ```
 
 ##### Run
 See `test.sh`.
-```shell
-mkdir -p build
-javac -encoding UTF-8 -d build -cp lib/jigsaw.jar src/solution/Solution.java
-java -cp lib/jigsaw.jar:build judge.main
-```
 
