@@ -22,6 +22,7 @@
 
     <target name='test' depends='compile'>
         <junit printsummary='yes'>
+            <formatter type="plain" usefile="false"/>
             <classpath>
                 <path refid='classpath'/>
                 <path refid='application'/>

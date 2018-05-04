@@ -73,14 +73,14 @@ public class ImplementImageIOTest {
 
             File in = new File(inputName);
             Image image = javax.imageio.ImageIO.read(in);
-            tester.myWrite(image, "output/testOutput.bmp");
+            tester.myWrite(image, "assets/testOutput.bmp");
 
             //getting the MD5 for the two files.
             String originMD5 = getMD5FromFile(inputName);
-            String outputMD5 = getMD5FromFile("output/testOutput.bmp");
+            String outputMD5 = getMD5FromFile("assets/testOutput.bmp");
             assertEquals(originMD5, outputMD5);
 
-            File output = new File("output/testOutput.bmp");
+            File output = new File("assets/testOutput.bmp");
             output.delete();
         }
     }
