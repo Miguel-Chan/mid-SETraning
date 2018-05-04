@@ -20,7 +20,7 @@
         <delete dir='${build.dir}'/>
     </target>
 
-    <target name='test' depends='compile'>
+    <target name='test' depends='compile, jar'>
         <junit printsummary='yes'>
             <formatter type="plain" usefile="false"/>
             <classpath>
