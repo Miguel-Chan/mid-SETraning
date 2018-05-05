@@ -75,8 +75,9 @@ public class MazeBug extends Bug {
     private int[] getDirectionsCount() {
 	    int[] result = {0, 0, 0, 0};
 	    for (int i = 0; i < crossLocation.size() - 1; i++) {
-	        result[crossLocation.get(i).getDirectionToward(
-	                crossLocation.get(i + 1)) / Location.RIGHT]++;
+            int index = crossLocation.get(i).getDirectionToward(
+                    crossLocation.get(i + 1)) / Location.RIGHT;
+	        result[index]++;
         }
         result[crossLocation.get(crossLocation.size() - 1).getDirectionToward(
                 getLocation()

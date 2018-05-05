@@ -98,13 +98,16 @@ public class Solution extends Jigsaw {
 	public void estimateValue(JigsawNode jNode) {
 		int s = 0; // 1.后续节点不正确的数码个数
         int distance = 0; //2. 放错位的数码与其正确位置的距离
-		int dimension = JigsawNode.getDimension();
+        int difference = 0;
+        int wrongPos = 0;
+        int dimension = JigsawNode.getDimension();
 		for (int index = 1; index < dimension * dimension; index++) {
 			if (jNode.getNodesState()[index] + 1 != jNode.getNodesState()[index + 1]) {
 				s++;
 			}
 			if (jNode.getNodesState()[index] != 0 &&
                     jNode.getNodesState()[index] != endJNode.getNodesState()[index]) {
+                wrongPos++;
                 int endIndex = 1;
                 for (int i = 1; i < endJNode.getNodesState().length; i++) {
                     if (endJNode.getNodesState()[i] == jNode.getNodesState()[index]) {
@@ -118,9 +121,10 @@ public class Solution extends Jigsaw {
                 int x2 = (index - 1) / dimension;
                 int y2 = (index - 1) % dimension;
 
+                difference += Math.abs(x1 - x2) + Math.abs(y1 - y2);
                 distance += (int)Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1- y2), 2));
             }
 		}
-		jNode.setEstimatedValue(s + distance * 3);
+		jNode.setEstimatedValue(s * 2 + distance * 3 + difference + wrongPos);
 	}
 }
